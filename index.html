@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>interactivepolicy_lite</title>
+  <!-- voila log js -->
+  <script>
+    const _debug = console.debug;
+    const _info = console.info;
+    const _warn = console.warn;
+    const _error = console.error;
+
+    function post(payload) {
+      try {
+        window.top.postMessage(payload);
+      } catch(err) {
+        window.top.postMessage({ level: "debug", msg: ["[Voilà]:",
+                                                       "Issue cloning object when posting log message, JSON stringify version is:",
+                                                       JSON.stringify(payload)
+                                                       ] });
+      }
+    }
+    console.debug = (...args) => {
+        post({ level: "debug", msg: ["[Voilà]:", ...args] });
+        _debug(...args);
+    };
+
+    console.info = console.info = (...args) => {
+        post({ level: "info", msg: ["[Voilà]:", ...args] });
+        _info(...args);
+    };
+
+    console.warn = (...args) => {
+        post({ level: "warn", msg: ["[Voilà]:", ...args] });
+        _warn(...args);
+    };
+
+    console.error = (...args) => {
+        post({ level: "error", msg: ["[Voilà]:", ...args] });
+        _error(...args);
+    };
+  </script>
+
+
+
+
+
+
+<style type="text/css">
+    pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: var(--jp-cell-editor-active-background) }
+.highlight { background: var(--jp-cell-editor-background); color: var(--jp-mirror-editor-variable-color) }
+.highlight .c { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment */
+.highlight .err { color: var(--jp-mirror-editor-error-color) } /* Error */
+.highlight .k { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword */
+.highlight .o { color: var(--jp-mirror-editor-operator-color); font-weight: bold } /* Operator */
+.highlight .p { color: var(--jp-mirror-editor-punctuation-color) } /* Punctuation */
+.highlight .ch { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Preproc */
+.highlight .cpf { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Single */
+.highlight .cs { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Special */
+.highlight .kc { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Pseudo */
+.highlight .kr { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Type */
+.highlight .m { color: var(--jp-mirror-editor-number-color) } /* Literal.Number */
+.highlight .s { color: var(--jp-mirror-editor-string-color) } /* Literal.String */
+.highlight .ow { color: var(--jp-mirror-editor-operator-color); font-weight: bold } /* Operator.Word */
+.highlight .pm { color: var(--jp-mirror-editor-punctuation-color) } /* Punctuation.Marker */
+.highlight .w { color: var(--jp-mirror-editor-variable-color) } /* Text.Whitespace */
+.highlight .mb { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Bin */
+.highlight .mf { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Float */
+.highlight .mh { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Hex */
+.highlight .mi { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Integer */
+.highlight .mo { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Oct */
+.highlight .sa { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Affix */
+.highlight .sb { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Backtick */
+.highlight .sc { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Char */
+.highlight .dl { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Delimiter */
+.highlight .sd { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Doc */
+.highlight .s2 { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Double */
+.highlight .se { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Escape */
+.highlight .sh { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Heredoc */
+.highlight .si { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Interpol */
+.highlight .sx { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Other */
+.highlight .sr { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Regex */
+.highlight .s1 { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Single */
+.highlight .ss { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Symbol */
+.highlight .il { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Integer.Long */
+  </style>
+
+
+
+
+
+    
+
+<style type="text/css">
+/* Force rendering true colors when outputing to pdf */
+* {
+  -webkit-print-color-adjust: exact;
+}
+
+/* Misc */
+a.anchor-link {
+  display: none;
+}
+
+/* Input area styling */
+.jp-InputArea {
+  overflow: hidden;
+}
+
+.jp-InputArea-editor {
+  overflow: hidden;
+}
+
+.CodeMirror.cm-s-jupyter .highlight pre {
+/* weird, but --jp-code-padding defined to be 5px but 4px horizontal padding is hardcoded for pre.CodeMirror-line */
+  padding: var(--jp-code-padding) 4px;
+  margin: 0;
+
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+
+}
+
+.jp-OutputArea-output pre {
+  line-height: inherit;
+  font-family: inherit;
+}
+
+.jp-RenderedText pre {
+  color: var(--jp-content-font-color1);
+  font-size: var(--jp-code-font-size);
+}
+
+/* Using table instead of flexbox so that we can use break-inside property */
+/* CSS rules under this comment should not be required anymore after we move to the JupyterLab 4.0 CSS */
+
+
+.jp-CodeCell.jp-mod-outputsScrolled .jp-OutputArea-prompt {
+  min-width: calc(
+    var(--jp-cell-prompt-width) - var(--jp-private-cell-scrolling-output-offset)
+  );
+}
+
+.jp-OutputArea-child {
+  display: table;
+  width: 100%;
+}
+
+.jp-OutputPrompt {
+  display: table-cell;
+  vertical-align: top;
+  min-width: var(--jp-cell-prompt-width);
+}
+
+body[data-format='mobile'] .jp-OutputPrompt {
+  display: table-row;
+}
+
+.jp-OutputArea-output {
+  display: table-cell;
+  width: 100%;
+}
+
+body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
+  display: table-row;
+}
+
+.jp-OutputArea-output.jp-OutputArea-executeResult {
+  width: 100%;
+}
+
+/* Hiding the collapser by default */
+.jp-Collapser {
+  display: none;
+}
+
+@page {
+    margin: 0.5in; /* Margin for each printed piece of paper */
+}
+
+@media print {
+  .jp-Cell-inputWrapper,
+  .jp-Cell-outputWrapper {
+    display: block;
+  }
+
+  .jp-OutputArea-child {
+    break-inside: avoid-page;
+  }
+}
+</style>
+
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"> </script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: {
+                    automatic: true
+                    }
+                }
+            });
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+    <!-- End of mathjax configuration --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@^5/css/all.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@^5/css/v4-shims.min.css" type="text/css" />
+
+
+  <!-- voila spinner -->
+  <style>
+    #loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 75vh;
+        color: var(--jp-content-font-color1);
+        font-family: sans-serif;
+    }
+
+    .spinner {
+      animation: rotation 2s infinite linear;
+      transform-origin: 50% 50%;
+    }
+
+    .spinner-container {
+      width: 10%;
+    }
+
+    @keyframes rotation {
+      from {transform: rotate(0deg);}
+      to   {transform: rotate(359deg);}
+    }
+
+    .voila-spinner-color1{
+      fill:#268380;
+    }
+
+    .voila-spinner-color2{
+      fill:#f8e14b;
+    }
+  </style>
+
+  <style>
+    /*Hide empty cells*/
+    .jp-mod-noOutputs.jp-mod-noInput {
+      display: none;
+    }
+  </style></head>
+<body class="jp-Notebook theme-light" data-base-url="./voila/" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+
+
+  <div id="loading" style="display: none;" >
+    <div class="spinner-container">
+      <svg class="spinner" data-name="c1" version="1.1" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><metadata><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title>voila</dc:title></cc:Work></rdf:RDF></metadata><title>spin</title><path class="voila-spinner-color1" d="m250 405c-85.47 0-155-69.53-155-155s69.53-155 155-155 155 69.53 155 155-69.53 155-155 155zm0-275.5a120.5 120.5 0 1 0 120.5 120.5 120.6 120.6 0 0 0-120.5-120.5z"/><path class="voila-spinner-color2" d="m250 405c-85.47 0-155-69.53-155-155a17.26 17.26 0 1 1 34.51 0 120.6 120.6 0 0 0 120.5 120.5 17.26 17.26 0 1 1 0 34.51z"/></svg>
+    </div>
+    <h2 id="loading_text">Running ...</h2>
+  </div>
+
+<script>
+
+  window.voila_heartbeat = function() {
+    console.log('Ok, voila is still executing...');
+  }
+
+  window.update_loading_text = function(cell_index, cell_count, text) {
+    const spinner = document.getElementById("loading")
+    if(spinner && spinner.style.display === "none"){
+      spinner.style.display="flex";
+    }
+    var el = document.getElementById("loading_text");
+    innterText = text ?? `Executing ${cell_index} of ${cell_count}`
+    if(el){
+      el.innerHTML = innterText;
+    }
+  }
+
+  window.display_cells = function() {
+    // remove the loading element
+    var el = document.getElementById("loading");
+    if(el){
+      el.parentNode.removeChild(el);
+    }
+    // show the cell output
+    el = document.getElementById("rendered_cells");
+    if(el){
+      el.style.display = '';
+    }
+  }
+
+  
+    window.voila_process = function(cell_index, cell_count) {
+      // no-op
+    };
+    window.voila_finish = function() {
+      // no-op
+    }
+  
+</script>
+<div id="rendered_cells" style="display: none">
+
+  
+  
+    
+
+    <script id="jupyter-config-data" type="application/json">
+      {"appVersion": "0.5.0a0", "baseUrl": "./", "disabledExtensions": [], "federated_extensions": [{"extension": "./extension", "load": "static/remoteEntry.aa1060b2d1221f8e5688.js", "name": "jupyterlab_pygments", "style": "./style"}, {"extension": "./extension", "load": "static/remoteEntry.d6df56cd69f4640706bc.js", "name": "@jupyter-widgets/jupyterlab-manager"}, {"extension": "./extension", "load": "static/remoteEntry.aa84dcab5fff0c010c24.js", "name": "@voila-dashboards/jupyterlab-preview", "style": "./style"}], "fullLabextensionsUrl": "./labextensions", "fullMathjaxUrl": "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js", "fullStaticUrl": "./build", "kernelId": "", "labThemeName": "JupyterLab Light", "mathjaxConfig": "TeX-AMS_HTML-full,Safe", "notebookSrc": [{"cell_source": "# Copyright (c) 2022 Neil Majithia\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n# SOFTWARE.", "cell_type": "code"}, {"cell_source": "%matplotlib inline\nimport ipywidgets as widgets\nimport matplotlib.pyplot as plt\nimport matplotlib.lines as mlines\nimport os\nimport pandas as pd\nimport gc\nimport json\n\n\nfilename = r\u0027simple simulator unemployment.xlsx\u0027\nplt.style.use(\u0027seaborn-poster\u0027)\ndisplay(widgets.HTML(\u0027\u0027\u0027\u003cstyle\u003e\n    p, h1, h2, h3, h4, ul, ol, li { max-width: 70vw !important; margin: 0px auto 5px auto !important;}\n    img {max-width:  !important; display: block; margin: 0px auto 1px auto !important;}\n    p, ul, ol { font-size: 1.4em !important}\n    .widget-label { min-width: min-content !important; }\n    /* .jp-RenderedHTMLCommon.jp-RenderedMarkdown.jp-MarkdownOutput { height: min-content; min-height: 35px;} */\n\u003c/style\u003e\u0027\u0027\u0027))\nstyle = {\u0027description_width\u0027: \u0027initial\u0027}", "cell_type": "code"}, {"cell_source": "\u003ch1 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n    Understanding Inflation and Central Bank Policy Choices\n\u003c/h1\u003e", "cell_type": "markdown"}, {"cell_source": "#Cache default values of the simulator in the Excel\nshock_size = -0.03 \nno_policy = \u0027[[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4, 1, 101, 0.04761904761904767], [5, 97, 0.07619047619047614, 100, 5, 2, 4, 1, 101, 0.04761904761904767], [6, 97, 0.07619047619047614, 100, 8, 5, 4, 1, 101, 0.04761904761904767], [7, 97, 0.07619047619047614, 100, 11, 8, 4, 1, 101, 0.04761904761904767], [8, 97, 0.07619047619047614, 100, 14, 11, 4, 1, 101, 0.04761904761904767], [9, 97, 0.07619047619047614, 100, 17, 14, 4, 1, 101, 0.04761904761904767], [10, 97, 0.07619047619047614, 100, 20, 17, 4, 1, 101, 0.04761904761904767], [11, 97, 0.07619047619047614, 100, 23, 20, 4, 1, 101, 0.04761904761904767], [12, 97, 0.07619047619047614, 100, 26, 23, 4, 1, 101, 0.04761904761904767], [13, 97, 0.07619047619047614, 100, 29, 26, 4, 1, 101, 0.04761904761904767], [14, 97, 0.07619047619047614, 100, 32, 29, 4, 1, 101, 0.04761904761904767], [15, 97, 0.07619047619047614, 100, 35, 32, 4, 1, 101, 0.04761904761904767], [16, 97, 0.07619047619047614, 100, 38, 35, 4, 1, 101, 0.04761904761904767], [17, 97, 0.07619047619047614, 100, 41, 38, 4, 1, 101, 0.04761904761904767], [18, 97, 0.07619047619047614, 100, 44, 41, 4, 1, 101, 0.04761904761904767], [19, 97, 0.07619047619047614, 100, 47, 44, 4, 1, 101, 0.04761904761904767], [20, 97, 0.07619047619047614, 100, 50, 47, 4, 1, 101, 0.04761904761904767], [21, 97, 0.07619047619047614, 100, 53, 50, 4, 1, 101, 0.04761904761904767], [22, 97, 0.07619047619047614, 100, 56, 53, 4, 1, 101, 0.04761904761904767], [23, 97, 0.07619047619047614, 100, 59, 56, 4, 1, 101, 0.04761904761904767], [24, 97, 0.07619047619047614, 100, 62, 59, 4, 1, 101, 0.04761904761904767], [25, 97, 0.07619047619047614, 100, 65, 62, 4, 1, 101, 0.04761904761904767], [26, 97, 0.07619047619047614, 100, 68, 65, 4, 1, 101, 0.04761904761904767], [27, 97, 0.07619047619047614, 100, 71, 68, 4, 1, 101, 0.04761904761904767], [28, 97, 0.07619047619047614, 100, 74, 71, 4, 1, 101, 0.04761904761904767], [29, 97, 0.07619047619047614, 100, 77, 74, 4, 1, 101, 0.04761904761904767]]\u0027\nno_policy = json.loads(no_policy)\n\nbefore_policy = \u0027[[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767]]\u0027\nbefore_policy = json.loads(before_policy)\n\nafter_policy = \u0027[[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767], [6, 97.0, 0.07619047619047614, 100, 8, 5, 4.0, 1, 101, 0.04761904761904767]]\u0027\nafter_policy = json.loads(after_policy)", "cell_type": "code"}, {"cell_source": "def PlotStuff(exceloutputs:list, title, after = False, show=True, auto=False, legend=False, shockline=True, shocktext=False, recoverytext=False):\n    \u0027\u0027\u0027Plots inflation and unemployment on side-by-side subplots\u0027\u0027\u0027\n    colourlist = [\u0027#f05a5b\u0027, \u0027grey\u0027, \u0027pink\u0027]\n    figs, axs = plt.subplots(1, 4, figsize=[24, 8])\n    for data in exceloutputs:\n        colour = colourlist[exceloutputs.index(data)]\n        if after:\n            axs[0].plot([data[i][0] for i in range(1, len(data)-1)], [data[i][4] for i in range(1, len(data)-1)], colour)\n            axs[1].plot([data[i][0] for i in range(1, len(data)-1)], [data[i][3] for i in range(1, len(data)-1)], colour)\n            axs[2].plot([data[i][0] for i in range(1, len(data)-1)], [100*data[i][-1] for i in range(1, len(data)-1)], colour)\n            axs[3].plot([data[i][0] for i in range(1, len(data)-2)], [data[i][-3] for i in range(1, len(data)-2)], colour)\n            axs[0].plot([data[-2][0], data[-1][0]], [data[-2][4], data[-1][4]], \u0027black\u0027)\n            axs[1].plot([data[-2][0], data[-1][0]], [data[-2][3], data[-1][3]], \u0027black\u0027)\n            axs[2].plot([data[-2][0], data[-1][0]], [100*data[-2][-1], 100*data[-1][-1]], \u0027black\u0027)\n            axs[3].plot([data[-3][0], data[-2][0]], [data[-3][-3], data[-2][-3]], \u0027black\u0027)\n            axs[3].set_xlim(left=0.75, right=6.25)\n\n        else:\n            axs[0].plot([data[i][0] for i in range(1, len(data))], [data[i][4] for i in range(1, len(data))], colour)\n            axs[1].plot([data[i][0] for i in range(1, len(data))], [data[i][3] for i in range(1, len(data))], colour)\n            axs[2].plot([data[i][0] for i in range(1, len(data))], [100*data[i][-1] for i in range(1, len(data))], colour)\n            axs[3].plot([data[i][0] for i in range(1, len(data)-1)], [data[i][-3] for i in range(1, len(data)-1)], colour)\n            axs[0].plot(data[-1][0] + 1, data[-1][4])\n            axs[1].plot(data[-1][0] + 1, data[-1][3])\n            axs[2].plot(data[-1][0] + 1, 100*data[-1][-1])\n            axs[3].plot(data[-1][0] + 1, data[-1][-3])\n    axs[0].set_title(\u0027Inflation %\u0027)\n    axs[1].set_title(\u0027GDP\u0027)\n    axs[2].set_title(\u0027Unemployment %\u0027)\n    axs[3].set_title(\u0027Real Interest Rate %\u0027)\n    axs[0].set_xlabel(\u0027Period\u0027)\n    axs[1].set_xlabel(\u0027Period\u0027)\n    axs[2].set_xlabel(\u0027Period\u0027)\n    axs[3].set_xlabel(\u0027Period\u0027)\n    if shockline:\n        axs[0].vlines(x=4, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n        axs[1].vlines(x=4, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n        axs[2].vlines(x=4, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n        axs[3].vlines(x=4, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n        axs[0].vlines(x=5, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n        axs[1].vlines(x=5, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n        axs[2].vlines(x=5, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n        axs[3].vlines(x=5, ymin=0, ymax=200, color=\u0027silver\u0027, linestyles=\u0027dashed\u0027, label=\u0027shock\u0027)\n    if shocktext:\n        axs[0].text(x=3.85, y=8.16, s=\u0027SHOCK\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n        axs[1].text(x=3.85, y=100.675, s=\u0027SHOCK\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n        axs[2].text(x=3.85, y=11.175, s=\u0027SHOCK\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n        axs[3].text(x=3.85, y=7.675, s=\u0027SHOCK\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n    if recoverytext:\n            axs[0].text(x=5.3, y=8.15, s=\u0027POLICY\\nREACTION\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n            axs[1].text(x=5.3, y=100.625, s=\u0027POLICY\\nREACTION\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n            axs[2].text(x=5.3, y=11.125, s=\u0027POLICY\\nREACTION\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n            axs[3].text(x=5.3, y=7.625, s=\u0027POLICY\\nREACTION\u0027, rotation=\u0027vertical\u0027, horizontalalignment=\u0027center\u0027)\n\n\n    if not auto:\n        axs[0].set_ylim(bottom=1.5, top=9)\n        axs[1].set_ylim(bottom=93.5, top=101.5)\n        axs[2].set_ylim(bottom=4, top=12)\n        axs[3].set_ylim(bottom=0.5, top=8.5)\n\n\n    figs.suptitle(title, fontsize=16)\n    \n    if legend:\n        label1 = mlines.Line2D([], [], color=\u0027#f05a5b\u0027, label=\u0027Your Choice\u0027)\n        label2 = mlines.Line2D([], [], color=\u0027grey\u0027, label=\u0027Benchmark\u0027)\n        axs[0].legend(handles=[label1, label2], bbox_to_anchor=(0.8, 1.2))\n        # axs[0].legend(handles=[label1, label2])\n\n    if show:\n        plt.show()\n    else:\n        return figs, axs\n\ndef AppendtoPlot(figs, axs, new_excel):\n    axs[0].plot([new_excel[i][0] for i in range(1, len(new_excel))], [new_excel[i][4] for i in range(1, len(new_excel))])\n    axs[1].plot([new_excel[i][0] for i in range(1, len(new_excel))], [new_excel[i][3] for i in range(1, len(new_excel))])\n    axs[2].plot([new_excel[i][0] for i in range(1, len(new_excel))], [new_excel[i][-1] for i in range(1, len(new_excel))])\n    axs[3].plot([new_excel[i][0] for i in range(1, len(new_excel))], [new_excel[i][-3] for i in range(1, len(new_excel))])\n    return figs, axs\n    \n", "cell_type": "code"}, {"cell_source": "October 2022: The job of central banks in these years is like riding a rollercoaster. After having to fight with deflationary forces arising from the financial crisis in the late 2000\u2019s and from the 2020-2021 COVID-19 pandemic, inflation became the number one public enemy during 2022. Several shocks that range from the disruption in the global production chain to increasing commodity prices due to the Ukraine war have increased CPI inflation to levels incompatible with central banks\u2019 mandate of price stability. (see Figure 1)", "cell_type": "markdown"}, {"cell_source": "\u003cimg src=\u0027intrograph.jpg\u0027\u003e\n\u003cp style=\u0027text-align: center\u0027\u003eFigure 1\nSource: ... \u003c/p\u003e", "cell_type": "markdown"}, {"cell_source": "Central bankers may yearn for past too-low inflation scenarios where, if successful, monetary policy could yield both price stability and lower unemployment. Instead, when negative supply shocks - like an oil shock - hit the economy central bankers face a nasty trade-off between price stability and unemployment, at least in the short run. Bringing inflation down to hit the target in the short run is technically possible but, is it worth the economic downturn and the increase in unemployment that this would entail? Most central banks consider that it is not since they take the inflation target as a medium run goal. Within this time frame central banks face two uncertainties that condition their decision. \n* First, how persistent are the underlying shocks and/or may there be in the near future counterbalancing disinflationary shocks? \n* Second, how anchored are inflation expectations to the central bank\u2019s inflation target and how serious is the danger of second round effects? \nA tight disinflationary policy could produce needless suffering if the underlying inflationary forces dissipate in the near future. However, a too timid response of monetary policy to inflation may trigger de-anchoring and second round effects that would push inflation further away from the target.", "cell_type": "markdown"}, {"cell_source": "This interactive simulation can help you to understand some of the monetary policy dilemmas faced by central banks in the wake of the pandemic and the war in Ukraine explained above. \n* All the sections share the common feature of representing an economy hit by an inflationary supply shock (think of an oil price shock). \n* First, as a benchmark, the consequences of the shock for inflation are  shown assuming that monetary policy is passive and that expected inflation is equal to last period\u2019s inflation, i.e.inflation expectations are not anchored to the central bank\u2019s inflation target. . \n* In the second section you take charge of monetary policy and use your interest rate choice to  change the consequences of the shock for the first period after the shock. Here you will experience the short run trade-off implied in this monetary policy decision. \n* In the third section you can compare the no-policy reaction benchmark with two alternative monetary policy paths: an active but too timid monetary policy and one that succeeds in reducing inflation. . \n* In the fourth section you can put yourself in the skin of central banks with different degrees of inflation aversion to see that optimal monetary policy is compatible with different degrees of tightening. \n* Finally, the last section introduces inflation anchoring for the first time. It reveals why anchoring inflation expectations is so important to central banks because it allows monetary policy to bring inflation back to the target quicker and with lower unemployment costs.\n", "cell_type": "markdown"}, {"cell_source": "\u003ch2 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n    The Supply Shock\n\u003c/h2\u003e", "cell_type": "markdown"}, {"cell_source": "When the price of imported energy and or commodities goes up, certain goods such as fuel or food become more expensive for the consumer. Costs of production go up as well and firms try to pass-through these higher costs to final prices. These effects happen relatively quickly and concentrate in the first period, as shown in the figure below (Fig. 2). What happens in the following periods depends on policy. In the following sections you can explore different policy options and scenarios.", "cell_type": "markdown"}, {"cell_source": "\u003cimg src=\"supplyshockintrograph.jpg\"\u003e\n\u003cp style=\u0027text-align: center\u0027\u003eFigure 2\u003c/p\u003e", "cell_type": "markdown"}, {"cell_source": "\u003ch2 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n    No Policy Reaction\n\u003c/h2\u003e", "cell_type": "markdown"}, {"cell_source": "\u003ch3\u003eIf there is no policy response to the rise in inflation caused by the oil shock,  the situation quickly spirals out of control as inflation rises period by period (Fig. 3)\u003c/h3\u003e", "cell_type": "markdown"}, {"cell_source": "fig, ax = plt.subplots(1, 1, figsize = [12, 6])\nax.plot([no_policy[i][0] for i in range(1, 16)], [no_policy[i][4] for i in range(1, 16)], \u0027#f05a5b\u0027)\nax.set_title(\u0027An inflation shock with no policy response\u0027)\nax.set_ylabel(\u0027Inflation %\u0027)\nax.set_xlabel(\u0027Period\u0027)\nax.xaxis.set_ticks(range(1, 16))\n\nplt.show()", "cell_type": "code"}, {"cell_source": "\u003cp style=\u0027text-align: center\u0027\u003eFigure 3\u003c/p\u003e", "cell_type": "markdown"}, {"cell_source": "When the price of oil increases, inflation goes up in the shock period due to the increase in the price of fuel for consumers and the pass-through of the increase in firms\u2019 costs to final prices. This increase in inflation has two effects relevant for next period:\n\n* First, it reduces the purchasing power of workers, which means that workers\u2019 real wages are below the level consistent with the state of the labour market. [The real wage shown by the PS curve falls below the real wage on the WS curve. i.e., the PS curve shifts down.]\n* Second, the increase in inflation increases inflation expectations for the future. [The PC curve shifts up.]\n\nDue to these two effects, in the next period nominal wages increase faster both to offset the loss in purchasing power due to the unexpected increase in past inflation and to avoid erosion of purchasing power due to higher expected inflation. Wage setters are frustrated in the attempt to restore the real wage to its initial level [on the WS curve]. Firms pass on the increase in unit labour costs arising from the rise in nominal wages to final prices to sustain their profit margin, increasing inflation above expected inflation. Therefore, in each period thereafter the attempt to restore workers\u2019 purchasing power will maintain nominal wage growth and inflation above expected inflation, fueling an inflation spiral.", "cell_type": "markdown"}, {"cell_source": "\u003ch2 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n    You choose: Monetary Policy Reaction to an Inflation Shock \n\u003c/h2\u003e", "cell_type": "markdown"}, {"cell_source": "\u003ch3\u003eThere\u0027s been a permanent inflation shock in period 5.\u003c/h3\u003e \n", "cell_type": "markdown"}, {"cell_source": "\u003cp\u003ePretend you\u0027re the Central Bank - use the slider to choose a real interest rate for the next period to try and stabilise inflation, and note how your choice affects the rest of the economy too. \u003c/p\u003e", "cell_type": "markdown"}, {"cell_source": "out = widgets.Output(layout={\u0027border\u0027: \u00272px solid gray\u0027, \u0027padding\u0027: \u00275px 5px 5px 5px\u0027, \u0027margin\u0027: \u00270 auto 0 auto\u0027, \u0027max_width\u0027: \u002770vw\u0027})\ndisplay(out)", "cell_type": "code"}, {"cell_source": "policy_results = \u0027{\"1\": [[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4, 1, 101, 0.04761904761904767], [5, 97, 0.07619047619047614, 100, 5, 2, 4, 1, 101, 0.04761904761904767], [6, 97, 0.07619047619047614, 100, 8, 5, 4, 1, 101, 0.04761904761904767]], \"2\": [[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767], [6, 97.0, 0.07619047619047614, 100, 8, 5, 4.0, 1, 101, 0.04761904761904767]], \"3\": [[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767], [6, 97.0, 0.07619047619047614, 100, 8, 5, 4.0, 1, 101, 0.04761904761904767]], \"4\": [[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767], [6, 97.0, 0.07619047619047614, 100, 8, 5, 4.0, 1, 101, 0.04761904761904767]], \"5\": [[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767], [6, 97.0, 0.07619047619047614, 100, 8, 5, 4.0, 1, 101, 0.04761904761904767]], \"6\": [[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767], [6, 97.0, 0.07619047619047614, 100, 8, 5, 4.0, 1, 101, 0.04761904761904767]], \"7\": [[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1.0, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4.0, 1, 101, 0.04761904761904767], [5, 97.0, 0.07619047619047614, 100, 5, 2, 4.0, 1, 101, 0.04761904761904767], [6, 97.0, 0.07619047619047614, 100, 8, 5, 4.0, 1, 101, 0.04761904761904767]]}\u0027\npolicy_results = json.loads(policy_results)", "cell_type": "code"}, {"cell_source": "r = widgets.IntSlider(1, 1, 7, description=\u0027Post-Shock Interest Rate\u0027)\nsub = widgets.Button(description=\u0027Submit\u0027)\nreset = widgets.Button(description=\u0027Reset\u0027)\n\n\nwith out:\n    out.clear_output(wait=True)\n    display(widgets.HBox((r, sub)))\n    # display(before_policy)\n    PlotStuff([before_policy], title=\u0027\u0027, shocktext=True, recoverytext=True, auto=False)\n    display(widgets.HTML(\u0027\u003cp style=\\\u0027text-align: center\\\u0027\u003eFigure 4\u003c/p\u003e\u0027))\n\n\ndef on_sub(b):\n    chosenrate = r.value\n    after_policy = policy_results[str(chosenrate)]\t\n    with out:\n        out.clear_output(wait=True)\n        display(widgets.HBox((r, sub, reset)))\n        display(widgets.HTML(f\u0027\u003cp\u003eYou chose a rate of {chosenrate}% - see below for its effects.\u003c/p\u003e\u0027))\n        # display(excel.evaluate(\u0027simulator!H6\u0027))\n        # display(after_policy)\n        PlotStuff([after_policy], title=\u0027\u0027, after=True, shocktext=True, recoverytext=True, auto=False)\n        display(widgets.HTML(\u0027\u003cp style=\\\u0027text-align: center\\\u0027\u003eFigure 4\u003c/p\u003e\u0027))\n        if chosenrate == 4:\n            display(widgets.HTML(\u0027\u003ch3\u003eYou have stabilised inflation - congratulations.\u003c/h3\u003e\u0027))\n            display(widgets.HTML(\u0027\u003cp\u003eThis is because you have chosen an interest rate equal to the stabilizing real interest rate [on the IS curve at the new lower equilibrium level of output]. However, your success in stopping the inflation spiral has been at the expense of an increase in unemployment. Increasing the interest rate you have reduced aggregate demand. With lower demand for final goods and services firms reduce labour demand, which increases unemployment. Higher unemployment reduces the workers\\\u0027 reservation wage and makes wage setters accept a fall in the real wage, although of lower magnitude than the erosion in real wage caused by the oil shock. [This is a move along the WS curve.] Now the wage-setting real wage exactly matches the real wage consistent with firms\\\u0027 price-setting behaviour and the higher oil price [on the lower PS curve]. Therefore, after your policy choice nominal wage growth and therefore actual inflation are equal to expected and past inflation. This is why inflation remains constant. [The PC curve does not shift upward.]\u003c/p\u003e\u0027))\n            display(widgets.HTML(\u0027\u003ch4\u003eYou have stabilized inflation but unemployment is higher and inflation, although stable, is higher than the central bank\\\u0027s target, which we assume was the pre-existing rate of inflation.\u003c/h4\u003e\u0027))\n            print()\n        elif 1 \u003c= chosenrate \u003c 4:\n            display(widgets.HTML(\u0027\u003ch3\u003eInflation is still getting higher, and meanwhile unemployment is getting worse too! \u003c/h3\u003e\u0027))\n            display(widgets.HTML(\u0027\u003cp\u003eThis is because you have chosen an interest rate lower than the stabilizing level. Therefore, you have not stopped the inflation spiral, although it proceeds more slowly after your policy choice. [The stabilizing real interest rate has gone up because equilibrium output is now lower.]\u003c/p\u003e\u0027))\n            display(widgets.HTML(\u0027\u003cp\u003eBy increasing the interest rate, you have reduced aggregate demand. With lower demand for final goods and services, firms reduce labour demand, which increases unemployment. Higher unemployment reduces the workers\\\u0027 reservation wage and makes wage setters accept a fall in the real wage, although of lower magnitude than the erosion in real wage caused by the oil shock. [This is a move along the WS curve.] Therefore, after the policy choice the wage-setting real wage is still higher than the real wage consistent with firms\\\u0027 price-setting behaviour [the wage on the WS is still above that on the on the lower PS curve] and conditions in the labour market meant that wage setters still seek to increase the purchasing power of workers. Thus, they set nominal wage growth (and effectively, inflation) above expected and past inflation. This is why inflation is still on an upwards path, although a more moderate one due to the partial acceptance as a result of higher unemployment of the dent made in real wages by the shock.\u003c/p\u003e\u0027))\n            display(widgets.HTML(\u0027\u003ch4\u003eWith your policy choice you have driven the economy to a stagflation scenario, that is, a situation that combines an increase in both inflation and unemployment.\u003c/h4\u003e\u0027))\n            print()\n        elif 4 \u003c chosenrate \u003c 7:\n            display(widgets.HTML(\u0027\u003ch3\u003eInflation is heading back down to the central bank\\\u0027s target. This is because you have chosen an interest rate higher than the stabilizing level. However, employment is tanking due to your policy choice.\u003c/h3\u003e\u0027))\n            display(widgets.HTML(\u0027\u003cp\u003eIncreasing the interest rate you have reduced aggregate demand. With lower demand for final goods and services, firms reduce labour demand, which increases unemployment. Higher unemployment reduces the workers\\\u0027 reservation wage and makes wage setters accept a fall in the real wage [a move along the WS curve]. This effect is so strong that now the wage-setting real wage is lower than the real wage consistent with firms\\\u0027 price-setting behaviour and the higher oil price [on the lower PS curve]. The acceptance \u2013 due to the deterioration in the labour market \u2013 of further reductions in the real wage translates into setting nominal wage growth (and effectually inflation) below expected and past inflation. This is why inflation falls [the PC shifts down].\u003c/p\u003e\u0027))\n            display(widgets.HTML(\u0027\u003ch4\u003eDespite your policy having reduced inflation, this is still higher than its pre-shock value. In the following periods you would need to keep the interest rate above its stabilizing level to drive inflation back to its pre-shock value (the central bank\\\u0027s target). [the PC would keep shifting down period by period]\u003c/h4\u003e\u0027))\n            print()\n        elif chosenrate == 7:\n            display(widgets.HTML(\u0027\u003ch3\u003eYou have chosen an interest rate higher than the equilibrium level and enough to drive inflation back to its pre-shock value. However, the cost of your policy shock in terms of unemployment is the highest.\u003c/h3\u003e\u0027))\n            display(widgets.HTML(\u0027\u003cp\u003eIncreasing the interest rate you have reduced aggregate demand. With lower demand for final goods and services firms reduce labour demand, which increases unemployment. Higher unemployment reduces the workers\\\u0027 reservation wage and makes wage setters accept a fall in the real wage [a move along the WS curve]. This effect is so strong that now the wage-setting real wage is lower than the real wage consistent with firms\\\u0027 price-setting behaviour and the higher oil price [on the lower PS curve]. The acceptance \u2013 due to the deterioration in the labour market \u2013 of further reductions in the real wage translates into setting nominal wage growth (and effectually inflation) below expected and past inflation. This is why inflation falls [the PC shifts down].\u003c/p\u003e\u0027))\n            display(widgets.HTML(\u0027\u003ch4\u003eSince you have hit the pre-shock inflation value (the central bank\\\u0027s target), then in the following period you would just need to adjust the interest rate to its equilibrium level. This is a \\\u0027shock therapy\\\u0027 approach to the problem.\u003c/h4\u003e\u0027))\n            print()\n\ndef on_reset(b):\n    with out:\n        out.clear_output(wait=True)\n        display(widgets.HBox((r, sub)))\n        # display(before_policy)\n        PlotStuff([before_policy], title=\u0027\u0027, shocktext=True, recoverytext=True, auto=False)\n        display(widgets.HTML(\u0027\u003cp style=\\\u0027text-align: center\\\u0027\u003eFigure 4\u003c/p\u003e\u0027))\n\nsub.on_click(on_sub)\nreset.on_click(on_reset)\n", "cell_type": "code"}, {"cell_source": "\u003ch3 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n   Test Yourself\n\u003c/h3\u003e", "cell_type": "markdown"}, {"cell_source": "1. You can verify that choosing the appropriate interest rate, the central bank manages to bring the inflation back to target. But could the central bank do it even better, in terms of inflation? Discuss if the central bank could avoid the increase of inflation in the shock period. Why or why not?\n2. Answer the following questions:\n\n\u0026ensp;\u0026ensp;a. Choosing different values for the interest rate, try to gauge the sensitivity of GDP with respect to the interest rate and the slope coefficient for the Phillips curve (hint: both are integers).\n    \n\u0026ensp;\u0026ensp;b. There is evidence that the Phillips curve has flattened during the lasts decades (see, for instance, \u003ca href=\u0027https://www.ecb.europa.eu/press/key/date/2021/html/ecb.sp211007~ab617e7d60.en.html\u0027\u003eProspects for inflation: sneezes and breezes (europa.eu)\u003c/a\u003e). Discuss how the flattening of the Phillips curve may affect the cost of bringing inflation down after the supply shock.", "cell_type": "markdown"}, {"cell_source": "\u003ch2 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n   Comparing Different Reactions by the Central Bank to an Oil Shock \n\u003c/h2\u003e", "cell_type": "markdown"}, {"cell_source": "\u003ch3\u003eIn response to an inflation shock, a Central Bank could have different approaches to recovery - each with their own costs and benefits over both short and long term.\u003c/h3\u003e\n\nUse Figure 5 to explore the whole path of the economy following different policy choices.Look first at the path of the real interest rate to see what the Central Bank does; then look at the outcomes for the economy.\n", "cell_type": "markdown"}, {"cell_source": "no_change_policy = \u0027[[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4, 1, 101, 0.04761904761904767], [5, 97, 0.07619047619047614, 100, 5, 2, 4, 1, 101, 0.04761904761904767], [6, 97, 0.07619047619047614, 100, 8, 5, 4, 1, 101, 0.04761904761904767], [7, 97, 0.07619047619047614, 100, 11, 8, 4, 1, 101, 0.04761904761904767], [8, 97, 0.07619047619047614, 100, 14, 11, 4, 1, 101, 0.04761904761904767], [9, 97, 0.07619047619047614, 100, 17, 14, 4, 1, 101, 0.04761904761904767], [10, 97, 0.07619047619047614, 100, 20, 17, 4, 1, 101, 0.04761904761904767], [11, 97, 0.07619047619047614, 100, 23, 20, 4, 1, 101, 0.04761904761904767], [12, 97, 0.07619047619047614, 100, 26, 23, 4, 1, 101, 0.04761904761904767], [13, 97, 0.07619047619047614, 100, 29, 26, 4, 1, 101, 0.04761904761904767], [14, 97, 0.07619047619047614, 100, 32, 29, 4, 1, 101, 0.04761904761904767], [15, 97, 0.07619047619047614, 100, 35, 32, 4, 1, 101, 0.04761904761904767], [16, 97, 0.07619047619047614, 100, 38, 35, 4, 1, 101, 0.04761904761904767], [17, 97, 0.07619047619047614, 100, 41, 38, 4, 1, 101, 0.04761904761904767], [18, 97, 0.07619047619047614, 100, 44, 41, 4, 1, 101, 0.04761904761904767], [19, 97, 0.07619047619047614, 100, 47, 44, 4, 1, 101, 0.04761904761904767], [20, 97, 0.07619047619047614, 100, 50, 47, 4, 1, 101, 0.04761904761904767], [21, 97, 0.07619047619047614, 100, 53, 50, 4, 1, 101, 0.04761904761904767], [22, 97, 0.07619047619047614, 100, 56, 53, 4, 1, 101, 0.04761904761904767], [23, 97, 0.07619047619047614, 100, 59, 56, 4, 1, 101, 0.04761904761904767], [24, 97, 0.07619047619047614, 100, 62, 59, 4, 1, 101, 0.04761904761904767], [25, 97, 0.07619047619047614, 100, 65, 62, 4, 1, 101, 0.04761904761904767], [26, 97, 0.07619047619047614, 100, 68, 65, 4, 1, 101, 0.04761904761904767], [27, 97, 0.07619047619047614, 100, 71, 68, 4, 1, 101, 0.04761904761904767], [28, 97, 0.07619047619047614, 100, 74, 71, 4, 1, 101, 0.04761904761904767], [29, 97, 0.07619047619047614, 100, 77, 74, 4, 1, 101, 0.04761904761904767]]\u0027\nno_change_policy = json.loads(no_change_policy)\n\ntimid_policy = \u0027[[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"estimated rs\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4, 1, 1, 101, 0.04761904761904767], [5, 97, 0.07619047619047614, 100, 5, 2, 4, 1, 2.5, 101, 0.04761904761904767], [6, 97, 0.07619047619047614, 98.5, 6.5, 5, 4, 1, 3.25, 101, 0.06190476190476191], [7, 97, 0.07619047619047614, 97.75, 7.25, 6.5, 4, 1, 3.625, 101, 0.06904761904761902], [8, 97, 0.07619047619047614, 97.375, 7.625, 7.25, 4, 1, 3.8125, 101, 0.07261904761904758], [9, 97, 0.07619047619047614, 97.1875, 7.8125, 7.625, 4, 1, 3.90625, 101, 0.07440476190476186], [10, 97, 0.07619047619047614, 97.09375, 7.90625, 7.8125, 4, 1, 3.953125, 101, 0.075297619047619], [11, 97, 0.07619047619047614, 97.046875, 7.953125, 7.90625, 4, 1, 3.9765625, 101, 0.07574404761904763], [12, 97, 0.07619047619047614, 97.0234375, 7.9765625, 7.953125, 4, 1, 3.98828125, 101, 0.07596726190476188], [13, 97, 0.07619047619047614, 97.01171875, 7.98828125, 7.9765625, 4, 1, 3.994140625, 101, 0.07607886904761907], [14, 97, 0.07619047619047614, 97.005859375, 7.994140625, 7.98828125, 4, 1, 3.9970703125, 101, 0.0761346726190476], [15, 97, 0.07619047619047614, 97.0029296875, 7.9970703125, 7.994140625, 4, 1, 3.99853515625, 101, 0.07616257440476193], [16, 97, 0.07619047619047614, 97.00146484375, 7.99853515625, 7.9970703125, 4, 1, 3.999267578125, 101, 0.07617652529761909], [17, 97, 0.07619047619047614, 97.000732421875, 7.999267578125, 7.99853515625, 4, 1, 3.9996337890625, 101, 0.07618350074404767], [18, 97, 0.07619047619047614, 97.0003662109375, 7.9996337890625, 7.999267578125, 4, 1, 3.99981689453125, 101, 0.0761869884672619], [19, 97, 0.07619047619047614, 97.00018310546875, 7.99981689453125, 7.9996337890625, 4, 1, 3.999908447265625, 101, 0.07618873232886902], [20, 97, 0.07619047619047614, 97.00009155273438, 7.999908447265625, 7.99981689453125, 4, 1, 3.9999542236328125, 101, 0.07618960425967258], [21, 97, 0.07619047619047614, 97.00004577636719, 7.9999542236328125, 7.999908447265625, 4, 1, 3.9999771118164062, 101, 0.07619004022507436], [22, 97, 0.07619047619047614, 97.0000228881836, 7.999977111816406, 7.9999542236328125, 4, 1, 3.999988555908203, 101, 0.07619025820777525], [23, 97, 0.07619047619047614, 97.0000114440918, 7.999988555908203, 7.999977111816406, 4, 1, 3.9999942779541016, 101, 0.07619036719912575], [24, 97, 0.07619047619047614, 97.0000057220459, 7.999994277954102, 7.999988555908203, 4, 1, 3.999997138977051, 101, 0.07619042169480095], [25, 97, 0.07619047619047614, 97.00000286102295, 7.999997138977051, 7.999994277954102, 4, 1, 3.9999985694885254, 101, 0.0761904489426386], [26, 97, 0.07619047619047614, 97.00000143051147, 7.999998569488525, 7.999997138977051, 4, 1, 3.9999992847442627, 101, 0.07619046256655737], [27, 97, 0.07619047619047614, 97.00000071525574, 7.999999284744263, 7.999998569488525, 4, 1, 3.9999996423721313, 101, 0.07619046937851681], [28, 97, 0.07619047619047614, 97.00000035762787, 7.999999642372131, 7.999999284744263, 4, 1, 3.9999998211860657, 101, 0.07619047278449653], [29, 97, 0.07619047619047614, 97.00000017881393, 7.999999821186066, 7.999999642372131, 4, 1, 3.999999910593033, 101, 0.07619047448748639]]\u0027\ntimid_policy = json.loads(timid_policy)\n\noptimal_policy = \u0027[[\"time\", \"YN\", \"uN\", \"Y\", \"\\\\u03c0\", \"\\\\u03c0e\", \"rS\", \"estimated rs\", \"r\", \"A\", \"u\"], [1, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 1, 101, 0.04761904761904767], [2, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 1, 101, 0.04761904761904767], [3, 100, 0.04761904761904767, 100, 2, 2, 1, 1, 1, 101, 0.04761904761904767], [4, 100, 0.04761904761904767, 100, 2, 2, 4, 1, 1, 101, 0.04761904761904767], [5, 97, 0.07619047619047614, 100, 5, 2, 4, 4, 5.5, 101, 0.04761904761904767], [6, 97, 0.07619047619047614, 95.5, 3.5, 5, 4, 4, 4.75, 101, 0.09047619047619049], [7, 97, 0.07619047619047614, 96.25, 2.75, 3.5, 4, 4, 4.375, 101, 0.08333333333333337], [8, 97, 0.07619047619047614, 96.625, 2.375, 2.75, 4, 4, 4.1875, 101, 0.07976190476190481], [9, 97, 0.07619047619047614, 96.8125, 2.1875, 2.375, 4, 4, 4.09375, 101, 0.07797619047619042], [10, 97, 0.07619047619047614, 96.90625, 2.09375, 2.1875, 4, 4, 4.046875, 101, 0.07708333333333328], [11, 97, 0.07619047619047614, 96.953125, 2.046875, 2.09375, 4, 4, 4.0234375, 101, 0.07663690476190477], [12, 97, 0.07619047619047614, 96.9765625, 2.0234375, 2.046875, 4, 4, 4.01171875, 101, 0.07641369047619051], [13, 97, 0.07619047619047614, 96.98828125, 2.01171875, 2.0234375, 4, 4, 4.005859375, 101, 0.07630208333333333], [14, 97, 0.07619047619047614, 96.994140625, 2.005859375, 2.01171875, 4, 4, 4.0029296875, 101, 0.07624627976190479], [15, 97, 0.07619047619047614, 96.9970703125, 2.0029296875, 2.005859375, 4, 4, 4.00146484375, 101, 0.07621837797619047], [16, 97, 0.07619047619047614, 96.99853515625, 2.00146484375, 2.0029296875, 4, 4, 4.000732421875, 101, 0.0762044270833333], [17, 97, 0.07619047619047614, 96.999267578125, 2.000732421875, 2.00146484375, 4, 4, 4.0003662109375, 101, 0.07619745163690472], [18, 97, 0.07619047619047614, 96.9996337890625, 2.0003662109375, 2.000732421875, 4, 4, 4.00018310546875, 101, 0.07619396391369049], [19, 97, 0.07619047619047614, 96.99981689453125, 2.00018310546875, 2.0003662109375, 4, 4, 4.000091552734375, 101, 0.07619222005208337], [20, 97, 0.07619047619047614, 96.99990844726562, 2.000091552734375, 2.00018310546875, 4, 4, 4.0000457763671875, 101, 0.07619134812127981], [21, 97, 0.07619047619047614, 96.99995422363281, 2.0000457763671875, 2.000091552734375, 4, 4, 4.000022888183594, 101, 0.07619091215587792], [22, 97, 0.07619047619047614, 96.9999771118164, 2.0000228881835938, 2.0000457763671875, 4, 4, 4.000011444091797, 101, 0.07619069417317703], [23, 97, 0.07619047619047614, 96.9999885559082, 2.000011444091797, 2.0000228881835938, 4, 4, 4.000005722045898, 101, 0.07619058518182664], [24, 97, 0.07619047619047614, 96.9999942779541, 2.0000057220458984, 2.000011444091797, 4, 4, 4.000002861022949, 101, 0.07619053068615145], [25, 97, 0.07619047619047614, 96.99999713897705, 2.000002861022949, 2.0000057220458984, 4, 4, 4.000001430511475, 101, 0.0761905034383138], [26, 97, 0.07619047619047614, 96.99999856948853, 2.0000014305114746, 2.000002861022949, 4, 4, 4.000000715255737, 101, 0.07619048981439502], [27, 97, 0.07619047619047614, 96.99999928474426, 2.0000007152557373, 2.0000014305114746, 4, 4, 4.000000357627869, 101, 0.07619048300243558], [28, 97, 0.07619047619047614, 96.99999964237213, 2.0000003576278687, 2.0000007152557373, 4, 4, 4.000000178813934, 101, 0.07619047959645586], [29, 97, 0.07619047619047614, 96.99999982118607, 2.0000001788139343, 2.0000003576278687, 4, 4, 4.000000089406967, 101, 0.076190477893466]]\u0027\noptimal_policy = json.loads(optimal_policy)\n\n\n", "cell_type": "code"}, {"cell_source": "out2 = widgets.Output(layout={\u0027border\u0027: \u00272px solid gray\u0027, \u0027padding\u0027: \u00275px 5px 5px 5px\u0027, \u0027margin\u0027: \u00270 auto 0 auto\u0027, \u0027max_width\u0027: \u002770vw\u0027})\ndisplay(out2)", "cell_type": "code"}, {"cell_source": "title = widgets.HTML(\u0027\u003ch2\u003e Comparing types of central banks \u003c/h2\u003e\u0027)\ndropdown = widgets.Dropdown(options=[\u0027Select an option from below\u0027, \u0027CB that wants to avoid higher unemployment despite equilibrium change\u0027,\n \u0027CB that slowly accepts change to unemployment\u0027, \n \u0027CB that accepts costly recession and unemployment below equilibrium to prioritise inflation\u0027], value=\u0027Select an option from below\u0027, layout={\u0027width\u0027: \u0027max-content\u0027}, description=\u0027\u0027)\n\ndef get_plots(CB):\n    if CB == \u0027CB that wants to avoid higher unemployment despite equilibrium change\u0027:\n        PlotStuff([no_change_policy[:15]], title=\u0027CB that wants to avoid change to unemployment despite equilibrium change\u0027, after=False, auto=False)\n        display(widgets.HTML(\u0027\u003cp style=\\\u0027text-align: center\\\u0027\u003eFigure 5\u003c/p\u003e\u0027))\n        display(widgets.HTML(\u0027\u003ch2\u003eLeaving policy unchanged is not sustainable\u003c/h2\u003e\u0027))\n        display(widgets.HTML(\u0027\u003cp\u003eAs shown previously, an unchanged interest rate ensures an unsustainable inflation spiral.\u003c/p\u003e\u0027))\n    elif CB == \u0027CB that slowly accepts change to unemployment\u0027:\n        PlotStuff([timid_policy[:15]], title=\u0027CB that slowly accepts change to unemployment\u0027,after=False)\n        display(widgets.HTML(\u0027\u003cp style=\\\u0027text-align: center\\\u0027\u003eFigure 5\u003c/p\u003e\u0027))\n        display(widgets.HTML(\u0027\u003ch2\u003eA slow response has short term benefits with a soft landing, at the expense of permanently high inflation\u003c/h2\u003e\u0027))\n        display(widgets.HTML(\u0027\u003cp\u003eIn this case, the central bank slowly adjusts from below the policy rate to its equilibrium level. The increases in the interest rate are not enough to drive inflation down since the interest rate is always below its stabilizing value. As a result, inflation keeps increasing. Eventually, inflation stabilizes at a level above its pre-shock value when the interest rate hits its equilibrium value. At this point, high inflation is entrenched by higher inflation expectations resulting from a prolonged period of excess inflation.\u003c/p\u003e\u0027))\n        display(widgets.HTML(\u0027\u003cp\u003eIt can be seen that in the short run this policy option may seem attractive, since it implies that neither inflation nor unemployment is very high. However, in the medium run it implies both excess inflation and higher unemployment.\u003c/p\u003e\u0027))\n    elif CB == \u0027CB that accepts costly recession and unemployment below equilibrium to prioritise inflation\u0027:\n        PlotStuff([optimal_policy[:15]], title=\u0027CB that accepts costly recession and unemployment below equilibrium to prioritise inflation\u0027, after=False)\n        display(widgets.HTML(\u0027\u003cp style=\\\u0027text-align: center\\\u0027\u003eFigure 5\u003c/p\u003e\u0027))\n        display(widgets.HTML(\u0027\u003ch2\u003eA costly recession, engineered by the CB with high interest rates, brings inflation under control but could be \u003c/h2\u003e\u0027))\n        display(widgets.HTML(\u0027\u003cp\u003eIn this case, the central bank responds quickly and strongly to the oil shock, increasing the interest rate above its equilibrium value from the outset. The short run sacrifice in terms of unemployment is severe, but it is necessary if the central bank wants to wipe out the effects of the shock on inflation. Doing this, the central bank avoids a permanent increase in inflation expectations, which allows a relaxation of monetary policy in the medium run to the new equilibrium at higher unemployment and a higher stabilizing interest rate. \u003c/p\u003e\u0027))\n    else:\n        display(widgets.HTML(\u0027\u003ch3\u003eChoose a CB behaviour from the Dropdown to see its performance, benefits and costs\u003c/h3\u003e\u0027))\n\n\nwith out2:\n    out2.clear_output(wait=True)\n    display(title)\n    widgets.interact(get_plots, CB=dropdown)\n    # display(inter)\n    # PlotStuff(no_change_policy[:15], title=\u0027CB that wants to avoid change to unemployment despite equilibrium change\u0027, after=False)\n    # PlotStuff(timid_policy[:15], title=\u0027CB that slowly accepts change to unemployment\u0027,after=False)\n    # PlotStuff(optimal_policy[:15], title=\u0027CB that accepts costly recession and unemployment below equilibrium to prioritise inflation\u0027, after=False)\n", "cell_type": "code"}, {"cell_source": "\u003ch3 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n   Test Yourself\n\u003c/h3\u003e", "cell_type": "markdown"}, {"cell_source": "1. Consider the following words taken from a 2022 speech by Jerome Powell, chairman of the US Federal Reserve (https://www.federalreserve.gov/newsevents/speech/powell20220826a.htm): \u003ci\u003e\"Reducing inflation is likely to require a sustained period of below-trend growth. Moreover, there will very likely be some softening of labor market conditions. While higher interest rates, slower growth, and softer labor market conditions will bring down inflation, they will also bring some pain to households and businesses. These are the unfortunate costs of reducing inflation. But a failure to restore price stability would mean far greater pain.(\u2026) During the 1970s, as inflation climbed, the anticipation of high inflation became entrenched in the economic decision making of households and businesses. The more inflation rose, the more people came to expect it to remain high, and they built that belief into wage and pricing decisions. (\u2026) History shows that the employment costs of bringing down inflation are likely to increase with delay, as high inflation becomes more entrenched in wage and price setting. The successful Volcker disinflation in the early 1980s followed multiple failed attempts to lower inflation over the previous 15 years. A lengthy period of very restrictive monetary policy was ultimately needed to stem the high inflation and start the process of getting inflation down to the low and stable levels that were the norm until the spring of last year. Our aim is to avoid that outcome by acting with resolve now.\"\u003c/i\u003e\n\nAfter reading the text, answer the following questions:\n\na. What do you think Mr. Powell means with \u003ci\u003e\"softening of labor market conditions\"\u003c/i\u003e?\n\nb. Which of the two active policy scenarios (\"CB that slowly accepts change to unemployment\" and \"CB that accepts costly recession and unemployment below equilibrium to prioritise inflation\") better fits the 1970\u2019s experience described by Powell? Why?\n\nc. Which of the two active policy scenarios better fits Jerome Powell\u2019s intentions in 2022? Why?\n\nd. Consider scenario number 3 where the central bank quickly reacts to the shock. You can see that in this scenario the interest rate and the unemployment rate peak to 5,5% and 9%, respectively. Now consider scenario number 2 and let us imagine that in period 15 the central bank resolves to tighten monetary policy in order to bring inflation back to the target. How tight should monetary policy be compared to scenario 3 (more/less)? How much unemployment would it cause compared to scenario 3 (more/less)? Why? Which part of the text can help you to answer these questions?\n", "cell_type": "markdown"}, {"cell_source": "\u003ch2 style=\"color: #f05a5b; font-family: \u0027Trebuchet MS\u0027, \u0027Lucida Sans Unicode\u0027, sans-serif; font-weight: bold;\"\u003e\n    A Central Bank with an Explicit Loss Function and Inflation Target (of 2%): The Policy Maker\u0027s Aversion to Inflation\n\u003c/h2\u003e", "cell_type": "markdown"}, {"cell_source": "\u003ch3\u003eNow that it\u0027s clear how a costly recession is necessary, we introduce the variable beta. Beta reflects the extent to which the Central Bank prioritises inflation control over growth/employment.\n\u003c/h3\u003e ", "cell_type": "markdown"}, {"cell_source": "In the previous section we saw that an oil shock implies a trade-off for the central bank between inflation and unemployment. In this section we show that the way this trade-off is dealt with depends on the central bank\u2019s degree of inflation aversion. [The CB uses the MR curve to determine its interest rate reaction to the shock.]\n\nA benchmark is set where the central bank places the same weight on deviations of inflation from its target and of unemployment from equilibrium. [beta is equal to one in the CB\u2019s loss function]\n", "cell_type": "markdown"}], "packagesSrc": "import piplite\nawait piplite.install([\u0027ipywidgets\u0027, \u0027matplotlib\u0027, \u0027pandas\u0027])\n", "settingsUrl": "./build/schemas", "terminalsAvailable": false, "themesUrl": "build/themes"}
+    </script>
+
+    
+
+    <div cell-index=1>
+          <script>
+            voila_process(1, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=2>
+          <script>
+            voila_process(2, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=3>
+          <script>
+            voila_process(3, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+    Understanding Inflation and Central Bank Policy Choices
+</h1>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=4>
+          <script>
+            voila_process(4, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=5>
+          <script>
+            voila_process(5, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=6>
+          <script>
+            voila_process(6, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>October 2022: The job of central banks in these years is like riding a rollercoaster. After having to fight with deflationary forces arising from the financial crisis in the late 2000’s and from the 2020-2021 COVID-19 pandemic, inflation became the number one public enemy during 2022. Several shocks that range from the disruption in the global production chain to increasing commodity prices due to the Ukraine war have increased CPI inflation to levels incompatible with central banks’ mandate of price stability. (see Figure 1)</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=7>
+          <script>
+            voila_process(7, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<img src='intrograph.jpg'>
+<p style='text-align: center'>Figure 1
+Source: ... </p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=8>
+          <script>
+            voila_process(8, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Central bankers may yearn for past too-low inflation scenarios where, if successful, monetary policy could yield both price stability and lower unemployment. Instead, when negative supply shocks - like an oil shock - hit the economy central bankers face a nasty trade-off between price stability and unemployment, at least in the short run. Bringing inflation down to hit the target in the short run is technically possible but, is it worth the economic downturn and the increase in unemployment that this would entail? Most central banks consider that it is not since they take the inflation target as a medium run goal. Within this time frame central banks face two uncertainties that condition their decision.</p>
+<ul>
+<li>First, how persistent are the underlying shocks and/or may there be in the near future counterbalancing disinflationary shocks?</li>
+<li>Second, how anchored are inflation expectations to the central bank’s inflation target and how serious is the danger of second round effects?</li>
+</ul>
+<p>A tight disinflationary policy could produce needless suffering if the underlying inflationary forces dissipate in the near future. However, a too timid response of monetary policy to inflation may trigger de-anchoring and second round effects that would push inflation further away from the target.</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=9>
+          <script>
+            voila_process(9, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>This interactive simulation can help you to understand some of the monetary policy dilemmas faced by central banks in the wake of the pandemic and the war in Ukraine explained above.</p>
+<ul>
+<li>All the sections share the common feature of representing an economy hit by an inflationary supply shock (think of an oil price shock).</li>
+<li>First, as a benchmark, the consequences of the shock for inflation are  shown assuming that monetary policy is passive and that expected inflation is equal to last period’s inflation, i.e.inflation expectations are not anchored to the central bank’s inflation target. .</li>
+<li>In the second section you take charge of monetary policy and use your interest rate choice to  change the consequences of the shock for the first period after the shock. Here you will experience the short run trade-off implied in this monetary policy decision.</li>
+<li>In the third section you can compare the no-policy reaction benchmark with two alternative monetary policy paths: an active but too timid monetary policy and one that succeeds in reducing inflation. .</li>
+<li>In the fourth section you can put yourself in the skin of central banks with different degrees of inflation aversion to see that optimal monetary policy is compatible with different degrees of tightening.</li>
+<li>Finally, the last section introduces inflation anchoring for the first time. It reveals why anchoring inflation expectations is so important to central banks because it allows monetary policy to bring inflation back to the target quicker and with lower unemployment costs.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=10>
+          <script>
+            voila_process(10, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+    The Supply Shock
+</h2>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=11>
+          <script>
+            voila_process(11, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>When the price of imported energy and or commodities goes up, certain goods such as fuel or food become more expensive for the consumer. Costs of production go up as well and firms try to pass-through these higher costs to final prices. These effects happen relatively quickly and concentrate in the first period, as shown in the figure below (Fig. 2). What happens in the following periods depends on policy. In the following sections you can explore different policy options and scenarios.</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=12>
+          <script>
+            voila_process(12, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<img src="supplyshockintrograph.jpg">
+<p style='text-align: center'>Figure 2</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=13>
+          <script>
+            voila_process(13, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+    No Policy Reaction
+</h2>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=14>
+          <script>
+            voila_process(14, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3>If there is no policy response to the rise in inflation caused by the oil shock,  the situation quickly spirals out of control as inflation rises period by period (Fig. 3)</h3>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=15>
+          <script>
+            voila_process(15, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=16>
+          <script>
+            voila_process(16, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p style='text-align: center'>Figure 3</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=17>
+          <script>
+            voila_process(17, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>When the price of oil increases, inflation goes up in the shock period due to the increase in the price of fuel for consumers and the pass-through of the increase in firms’ costs to final prices. This increase in inflation has two effects relevant for next period:</p>
+<ul>
+<li>First, it reduces the purchasing power of workers, which means that workers’ real wages are below the level consistent with the state of the labour market. [The real wage shown by the PS curve falls below the real wage on the WS curve. i.e., the PS curve shifts down.]</li>
+<li>Second, the increase in inflation increases inflation expectations for the future. [The PC curve shifts up.]</li>
+</ul>
+<p>Due to these two effects, in the next period nominal wages increase faster both to offset the loss in purchasing power due to the unexpected increase in past inflation and to avoid erosion of purchasing power due to higher expected inflation. Wage setters are frustrated in the attempt to restore the real wage to its initial level [on the WS curve]. Firms pass on the increase in unit labour costs arising from the rise in nominal wages to final prices to sustain their profit margin, increasing inflation above expected inflation. Therefore, in each period thereafter the attempt to restore workers’ purchasing power will maintain nominal wage growth and inflation above expected inflation, fueling an inflation spiral.</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=18>
+          <script>
+            voila_process(18, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+    You choose: Monetary Policy Reaction to an Inflation Shock 
+</h2>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=19>
+          <script>
+            voila_process(19, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3>There's been a permanent inflation shock in period 5.</h3>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=20>
+          <script>
+            voila_process(20, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Pretend you're the Central Bank - use the slider to choose a real interest rate for the next period to try and stabilise inflation, and note how your choice affects the rest of the economy too. </p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=21>
+          <script>
+            voila_process(21, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=22>
+          <script>
+            voila_process(22, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=23>
+          <script>
+            voila_process(23, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=24>
+          <script>
+            voila_process(24, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+   Test Yourself
+</h3>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=25>
+          <script>
+            voila_process(25, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<ol>
+<li>You can verify that choosing the appropriate interest rate, the central bank manages to bring the inflation back to target. But could the central bank do it even better, in terms of inflation? Discuss if the central bank could avoid the increase of inflation in the shock period. Why or why not?</li>
+<li>Answer the following questions:</li>
+</ol>
+<p>  a. Choosing different values for the interest rate, try to gauge the sensitivity of GDP with respect to the interest rate and the slope coefficient for the Phillips curve (hint: both are integers).</p>
+<p>  b. There is evidence that the Phillips curve has flattened during the lasts decades (see, for instance, <a href='https://www.ecb.europa.eu/press/key/date/2021/html/ecb.sp211007~ab617e7d60.en.html'>Prospects for inflation: sneezes and breezes (europa.eu)</a>). Discuss how the flattening of the Phillips curve may affect the cost of bringing inflation down after the supply shock.</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=26>
+          <script>
+            voila_process(26, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+   Comparing Different Reactions by the Central Bank to an Oil Shock 
+</h2>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=27>
+          <script>
+            voila_process(27, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3>In response to an inflation shock, a Central Bank could have different approaches to recovery - each with their own costs and benefits over both short and long term.</h3>
+<p>Use Figure 5 to explore the whole path of the economy following different policy choices.Look first at the path of the real interest rate to see what the Central Bank does; then look at the outcomes for the economy.</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=28>
+          <script>
+            voila_process(28, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=29>
+          <script>
+            voila_process(29, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=30>
+          <script>
+            voila_process(30, 35)
+          </script>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+
+</div>
+        </div><div cell-index=31>
+          <script>
+            voila_process(31, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+   Test Yourself
+</h3>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=32>
+          <script>
+            voila_process(32, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<ol>
+<li>Consider the following words taken from a 2022 speech by Jerome Powell, chairman of the US Federal Reserve (<a href="https://www.federalreserve.gov/newsevents/speech/powell20220826a.htm">https://www.federalreserve.gov/newsevents/speech/powell20220826a.htm</a>): <i>&quot;Reducing inflation is likely to require a sustained period of below-trend growth. Moreover, there will very likely be some softening of labor market conditions. While higher interest rates, slower growth, and softer labor market conditions will bring down inflation, they will also bring some pain to households and businesses. These are the unfortunate costs of reducing inflation. But a failure to restore price stability would mean far greater pain.(…) During the 1970s, as inflation climbed, the anticipation of high inflation became entrenched in the economic decision making of households and businesses. The more inflation rose, the more people came to expect it to remain high, and they built that belief into wage and pricing decisions. (…) History shows that the employment costs of bringing down inflation are likely to increase with delay, as high inflation becomes more entrenched in wage and price setting. The successful Volcker disinflation in the early 1980s followed multiple failed attempts to lower inflation over the previous 15 years. A lengthy period of very restrictive monetary policy was ultimately needed to stem the high inflation and start the process of getting inflation down to the low and stable levels that were the norm until the spring of last year. Our aim is to avoid that outcome by acting with resolve now.&quot;</i></li>
+</ol>
+<p>After reading the text, answer the following questions:</p>
+<p>a. What do you think Mr. Powell means with <i>&quot;softening of labor market conditions&quot;</i>?</p>
+<p>b. Which of the two active policy scenarios (&quot;CB that slowly accepts change to unemployment&quot; and &quot;CB that accepts costly recession and unemployment below equilibrium to prioritise inflation&quot;) better fits the 1970’s experience described by Powell? Why?</p>
+<p>c. Which of the two active policy scenarios better fits Jerome Powell’s intentions in 2022? Why?</p>
+<p>d. Consider scenario number 3 where the central bank quickly reacts to the shock. You can see that in this scenario the interest rate and the unemployment rate peak to 5,5% and 9%, respectively. Now consider scenario number 2 and let us imagine that in period 15 the central bank resolves to tighten monetary policy in order to bring inflation back to the target. How tight should monetary policy be compared to scenario 3 (more/less)? How much unemployment would it cause compared to scenario 3 (more/less)? Why? Which part of the text can help you to answer these questions?</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=33>
+          <script>
+            voila_process(33, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 style="color: #f05a5b; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif; font-weight: bold;">
+    A Central Bank with an Explicit Loss Function and Inflation Target (of 2%): The Policy Maker's Aversion to Inflation
+</h2>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=34>
+          <script>
+            voila_process(34, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3>Now that it's clear how a costly recession is necessary, we introduce the variable beta. Beta reflects the extent to which the Central Bank prioritises inflation control over growth/employment.
+</h3>
+
+</div>
+</div>
+</div>
+</div>
+        </div><div cell-index=35>
+          <script>
+            voila_process(35, 35)
+          </script>
+          
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>In the previous section we saw that an oil shock implies a trade-off for the central bank between inflation and unemployment. In this section we show that the way this trade-off is dealt with depends on the central bank’s degree of inflation aversion. [The CB uses the MR curve to determine its interest rate reaction to the shock.]</p>
+<p>A benchmark is set where the central bank places the same weight on deviations of inflation from its target and of unemployment from equilibrium. [beta is equal to one in the CB’s loss function]</p>
+
+</div>
+</div>
+</div>
+</div>
+        </div></div>
+<script type="text/javascript">
+  window.voila_finish();
+</script>
+
+  <script src="./build/voilite.js"></script>
+
+
+</body>
+
+
+
+</html>
