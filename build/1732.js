@@ -1,1 +1,1 @@
-(globalThis.webpackChunk_JUPYTERLAB_CORE_OUTPUT=globalThis.webpackChunk_JUPYTERLAB_CORE_OUTPUT||[]).push([[1732,2266,2516],{70764:()=>{},45158:()=>{},58635:()=>{},30139:()=>{},63653:()=>{}}]);
+(self.webpackChunk_JUPYTERLAB_CORE_OUTPUT=self.webpackChunk_JUPYTERLAB_CORE_OUTPUT||[]).push([[1732,2266,2516],{70764:()=>{},45158:()=>{},58635:()=>{},30139:()=>{},63653:()=>{}}]);

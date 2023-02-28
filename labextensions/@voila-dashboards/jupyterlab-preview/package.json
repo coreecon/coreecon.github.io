@@ -1,6 +1,6 @@
 {
   "name": "@voila-dashboards/jupyterlab-preview",
-  "version": "2.3.0-alpha.0",
+  "version": "2.3.0-alpha.1",
   "description": "A JupyterLab preview extension for Voilà",
   "keywords": [
     "jupyter",
@@ -86,7 +86,7 @@
       }
     },
     "_build": {
-      "load": "static/remoteEntry.aa84dcab5fff0c010c24.js",
+      "load": "static/remoteEntry.ee9c1ed2ef93fe7a7d0b.js",
       "extension": "./extension",
       "style": "./style"
     }
