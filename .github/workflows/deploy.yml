@@ -30,6 +30,10 @@ jobs:
         shell: bash -l {0}
         run: voici build --contents content --output-dir dist
 
+      - name: Copy images
+        shell: bash -l {0}
+        run: cp ./content/*.jpg ./dist
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
