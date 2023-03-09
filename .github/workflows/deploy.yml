@@ -36,7 +36,7 @@ jobs:
 
       - name: Copy extras
         shell: bash -l {0}
-        run: cp extras/* dist/extra
+        run: cp extras/* dist/extras
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
