@@ -5,6 +5,6 @@ dependencies:
   - python
   - pip
   - pip:
-    - jupyterlite < 0.1.0b18
+    - jupyterlite==0.1.0b18
     - voici>=0.2,<0.3.0
     - jupyterlite-xeus-python 
