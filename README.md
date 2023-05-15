@@ -1,22 +1,10 @@
-# CoreEcon Interactive tools
-Repository for all [CoreEcon](www.core-econ.org) interactive and coding   
+![CoreLogo](https://www.core-econ.org/wp-content/themes/coreecon/components/image/core-logo-bw-strapline.svg)
 
-## Voici builder
+# Interactive and coding resources
 
-## 📦 How to install extra packages
+This repository stores an online version for all  interactive and coding resources by [Core Economics](www.core-econ.org) and [The Economy](https://www.core-econ.org/project/core-the-economy/).
 
-You can pre-install extra packages for xeus-python by adding them to the ``environment.yml`` file.
+## Interactive resources
+- [Inflation and Monetary Policy](https://coreecon.github.io/voici/render/inflation.html)
 
-Only ``no-arch`` packages from ``conda-forge`` and packages from ``emscripten-forge`` can be installed.
-
-For example, if you want to create a Voici deployment with NumPy and Matplotlib pre-installed, you would need to edit the ``environment.yml`` file as following:
-
-```yml
-name: voici
-channels:
-  - https://repo.mamba.pm/emscripten-forge
-  - https://repo.mamba.pm/conda-forge
-dependencies:
-  - numpy
-  - matplotlib
-```
+> We are currently working on the online version of the resources. Please, be patient.
