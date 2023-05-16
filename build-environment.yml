@@ -8,3 +8,4 @@ dependencies:
     - jupyterlite
     - voici
     - jupyterlite-xeus-python 
+    - ipywidgets
