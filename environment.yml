@@ -7,3 +7,4 @@ dependencies:
   - ipywidgets
   - bqplot
   - matplotlib
+  - jupyterlab_widgets

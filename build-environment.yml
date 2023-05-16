@@ -8,3 +8,4 @@ dependencies:
     - ipywidgets==8.0.6
     - voici==0.3.3
     - jupyterlite-xeus-python==0.8.0
+    - jupyterlab_widgets
