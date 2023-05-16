@@ -28,7 +28,7 @@ jobs:
 
       - name: Build the JupyterLite site
         shell: bash -l {0}
-        run: voici build --contents content --output-dir dist
+        run: voici build --contents content --output-dir dist --apps lab
 
       - name: Create extra folder
         shell: bash -l {0}

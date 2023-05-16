@@ -6,6 +6,6 @@ dependencies:
   - pip
   - pip:
     - jupyterlite
-    - voici
-    - jupyterlite-xeus-python 
     - ipywidgets
+    - voici
+    - jupyterlite-xeus-python

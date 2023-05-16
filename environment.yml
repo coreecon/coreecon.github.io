@@ -4,6 +4,6 @@ channels:
   - https://repo.mamba.pm/conda-forge
 dependencies:
   - pandas
+  - ipywidgets
   - bqplot
   - matplotlib
-  - ipywidgets
